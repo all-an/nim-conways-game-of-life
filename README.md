@@ -27,3 +27,10 @@ These rules create interesting patterns and behavior, and the game is often used
 - The initial state of the board can be randomly generated.
 - The game follows the rules of Conway's Game of Life for cell evolution.
 - The game's evolution can be observed and displayed in the console or graphical interface.
+
+## Stuff
+
+Nim language
+Nico framework
+Nimble package manager
+SDL2 framework
