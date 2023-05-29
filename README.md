@@ -30,7 +30,7 @@ These rules create interesting patterns and behavior, and the game is often used
 
 ## Stuff
 
-Nim language
-Nico framework
-Nimble package manager
-SDL2 framework
+- Nim language 
+- Nico framework
+- Nimble package manager
+- SDL2 framework
