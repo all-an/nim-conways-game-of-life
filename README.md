@@ -10,6 +10,12 @@
 [![Forks](https://img.shields.io/github/forks/yourusername/game-of-life-nim)](https://github.com/yourusername/game-of-life-nim/network/members)
 [![Stars](https://img.shields.io/github/stars/yourusername/game-of-life-nim)](https://github.com/yourusername/game-of-life-nim/stargazers)
 
+## Run
+
+```bash
+nimble runr
+```
+
 ## About Conway's Game of Life
 
 Conway's Game of Life is a cellular automaton devised by the British mathematician John Horton Conway in 1970. It is a zero-player game that simulates the evolution of a population of cells on a two-dimensional grid. The game follows a set of simple rules that determine the life and death of each cell:
