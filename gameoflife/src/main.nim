@@ -34,6 +34,8 @@ proc neighbourCount(i, j : int) : int =
     for dj in -1..1:
       let ii = i + di
       let jj = j + dj
+      result += int(board[ii][jj])
+  result -= int(board[i][j])
 
 proc updateBoard() =
   for i in 0..<nx:
