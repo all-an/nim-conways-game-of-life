@@ -18,10 +18,11 @@ let dy = resolution
 let nx = wx div dx
 let ny = wy div dy
 
-var board = newSeqWith(nx, newSeq[bool](ny))
-board[0][0] = true
-board[10][0] = true
-board[0][5] = true
+var current = newSeqWith(nx, newSeq[bool](ny))
+var next = newSeqWith(nx, newSeq[bool](ny))
+current[0][0] = true
+current[10][0] = true
+current[0][5] = true
 
 var buttonDown = false
 
@@ -32,22 +33,33 @@ proc neighbourCount(i, j : int) : int =
   result = 0
   for di in -1..1:
     for dj in -1..1:
-      let ii = i + di
-      let jj = j + dj
-      result += int(board[ii][jj])
-  result -= int(board[i][j])
+      let ii = (i + di + nx) mod nx
+      let jj = (j + dj + ny) mod ny
+      result += int(current[ii][jj])
+  result -= int(current[i][j])
 
 proc updateBoard() =
   for i in 0..<nx:
     for j in 0..<ny:
+      let isAlive = current[i][j]
       let n = neighbourCount(i, j)
+      if (not isAlive and n==3):
+        #come alive
+        next[i][j] = true
+      elif (isAlive and (n<2 or n>3)):
+        #die
+        next[i][j] = false
+      else:
+        #maintain present state
+        next[i][j] = isAlive
+  swap(current, next)
 
 proc toggleCellInCurrent(x, y : int) =
   let i = x div dx
   let j = y div dy
   if i < 0 or i >= nx or j < 0 or j >= ny:
     return
-  board[i][j] = not board[i][j]
+  current[i][j] = not current[i][j]
 
 
 proc gameUpdate(dt: float32) =
@@ -66,13 +78,13 @@ proc gameDraw() =
   cls()
   setColor(if buttonDown: 7 else: 3)
   # printc("welcome to " & appName, screenWidth div 2, screenHeight div 2, 2)
-  setColor(2)
+  #[ setColor(2)
   boxfill(50,5,5,5)
   setColor(3)
-  boxfill(40,10,5,5)
+  boxfill(40,10,5,5) ]#
   for i in 0..<nx:
     for j in 0..<ny:
-      if board[i][j] == true:
+      if current[i][j] == true:
         setColor(2)
         boxfill(i * dx, j * dy, dx, dy)
       else:
