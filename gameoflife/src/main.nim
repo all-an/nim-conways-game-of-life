@@ -1,6 +1,8 @@
 import nico
 import sequtils
 import os
+import random
+import strutils
 
 const orgName = "all-an"
 const appName = "gameoflife"
@@ -20,14 +22,30 @@ let ny = wy div dy
 
 var current = newSeqWith(nx, newSeq[bool](ny))
 var next = newSeqWith(nx, newSeq[bool](ny))
-current[0][0] = true
+#[ current[0][0] = true
 current[10][0] = true
-current[0][5] = true
+current[0][5] = true ]#
+
+var gen = 0
 
 var buttonDown = false
 
+proc initBoard() =
+  for i in 0..<nx:
+    for j in 0..<ny:
+      let isOn = bool(rand(9) div 9)
+      current[i][j] = isOn
+  gen = 0
+
+proc initEmptyBoard() = 
+  for i in 0..<nx:
+    for j in 0..<ny:
+      current[i][j] = false
+  gen = 0
+
 proc gameInit() =
   loadFont(0, "font.png")
+  initBoard()
 
 proc neighbourCount(i, j : int) : int =
   result = 0
@@ -53,6 +71,7 @@ proc updateBoard() =
         #maintain present state
         next[i][j] = isAlive
   swap(current, next)
+  gen += 1
 
 proc toggleCellInCurrent(x, y : int) =
   let i = x div dx
@@ -66,13 +85,34 @@ proc gameUpdate(dt: float32) =
   if key(K_SPACE):
     updateBoard()
     sleep(200)
+  elif key(K_RETURN):
+    initBoard()
+    sleep(100)
+  elif key(K_0):
+    initEmptyBoard()
+    sleep(100)
 
-  if mousebtn(0):
+  elif mousebtn(0):
     let (x, y) = mouse()
     toggleCellInCurrent(x, y)
     echo x, ",", y
     sleep(200)
   # buttonDown = btn(pcA)
+
+proc drawBoard() = 
+  for i in 0..<nx:
+    for j in 0..<ny:
+      if current[i][j] == true:
+        setColor(if buttonDown: 7 else: 3)
+        boxfill(i * dx, j * dy, dx, dy)
+      else:
+        setColor(7)
+
+proc printGen() =
+  setColor(9)
+  let msg = "Generation count: $1" % [$gen]
+  printc(msg, screenWidth div 4, screenHeight div 16, 1)
+
 
 proc gameDraw() =
   cls()
@@ -82,13 +122,8 @@ proc gameDraw() =
   boxfill(50,5,5,5)
   setColor(3)
   boxfill(40,10,5,5) ]#
-  for i in 0..<nx:
-    for j in 0..<ny:
-      if current[i][j] == true:
-        setColor(2)
-        boxfill(i * dx, j * dy, dx, dy)
-      else:
-        setColor(7)
+  drawBoard()
+  printGen()
 
 nico.init(orgName, appName)
 nico.createWindow(appName, wx, wy, 4, false)
